@@ -323,6 +323,31 @@ defmodule Kino.MapLibre do
     {:noreply, ctx}
   end
 
+  @impl true
+  def handle_event("click", params, ctx) do
+    ref = ctx.__private__.ref
+    send(Kino.SubscriptionManager, {:event, "maplibre.#{ref}.click", params})
+    {:noreply, ctx}
+  end
+
+  def handle_event("move", params, ctx) do
+    ref = ctx.__private__.ref
+    send(Kino.SubscriptionManager, {:event, "maplibre.#{ref}.move", params})
+    {:noreply, ctx}
+  end
+
+  def handle_event("rotate", params, ctx) do
+    ref = ctx.__private__.ref
+    send(Kino.SubscriptionManager, {:event, "maplibre.#{ref}.rotate", params})
+    {:noreply, ctx}
+  end
+
+  def handle_event("zoom", params, ctx) do
+    ref = ctx.__private__.ref
+    send(Kino.SubscriptionManager, {:event, "maplibre.#{ref}.zoom", params})
+    {:noreply, ctx}
+  end
+
   defp update_events(%MapLibre{} = ml, key, value) do
     update_events(%__MODULE__{spec: ml.spec}, key, value)
   end
