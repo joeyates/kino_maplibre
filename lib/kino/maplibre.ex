@@ -323,6 +323,13 @@ defmodule Kino.MapLibre do
     {:noreply, ctx}
   end
 
+  @impl true
+  def handle_event("click", %{"lng" => lng, "lat" => lat}, ctx) do
+    ref = ctx.__private__.ref
+    send(Kino.SubscriptionManager, {:event, "maplibre.#{ref}.click", {lng, lat}})
+    {:noreply, ctx}
+  end
+
   defp update_events(%MapLibre{} = ml, key, value) do
     update_events(%__MODULE__{spec: ml.spec}, key, value)
   end
