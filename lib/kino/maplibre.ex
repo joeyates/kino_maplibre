@@ -147,6 +147,13 @@ defmodule Kino.MapLibre do
   end
 
   @doc """
+  Removes all markers from the map
+  """
+  def clear_markers(map) do
+    update_events(map, :markers, [])
+  end
+
+  @doc """
   Adds a navigation control to the map. A navigation control contains zoom buttons and a compass.
 
   ## Options
@@ -275,6 +282,12 @@ defmodule Kino.MapLibre do
     {:noreply, ctx}
   end
 
+  def handle_cast({:clear_markers}, ctx) do
+    broadcast_event(ctx, "clear_markers", nil)
+    ctx = clear_assigned_events(ctx, :markers)
+    {:noreply, ctx}
+  end
+
   def handle_cast({:clusters, clusters}, ctx) do
     broadcast_event(ctx, "clusters_expansion", clusters)
     ctx = update_assigned_events(ctx, :clusters, clusters)
@@ -360,6 +373,10 @@ defmodule Kino.MapLibre do
 
   defp update_events(kino, key, value) do
     Kino.JS.Live.cast(kino, {key, value})
+  end
+
+  defp clear_assigned_events(ctx, key) do
+    put_in(ctx, [:assigns, :events, key] , [])
   end
 
   defp update_assigned_events(ctx, key, value) do
